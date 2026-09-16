@@ -16,6 +16,7 @@ class User(AbstractUser):
         STORE_KEEPER = "Store_keeper", "STORE_KEEPER"
         AUDITOR = "Auditor", "AUDITOR"
     role = models.CharField(max_length=20, choices=Role.choices)
+    is_system_admin = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if not self.employee_ID:
