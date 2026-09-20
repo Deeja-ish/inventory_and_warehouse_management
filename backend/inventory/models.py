@@ -9,10 +9,11 @@ from users.models import User
 class Category(models.Model):
     category_name = models.CharField(max_length=100, unique=True)
     category_description = models.TextField(blank=True)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='category')
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
+    
     def __str__(self):
         return f"{self.category_name}"
 
@@ -37,7 +38,7 @@ class Product(models.Model):
         PACK = "PACK", "Packs"
     unit_of_measure = models.CharField(max_length=50, choices=UnitType.choices)
     product_description = models.TextField(blank=True)
-    reorder_level = models.PositiveIntegerField()
+    reorder_level = models.PositiveIntegerField(default=0)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
