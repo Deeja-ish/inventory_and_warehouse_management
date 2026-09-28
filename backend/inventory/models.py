@@ -83,6 +83,8 @@ class Inventory(models.Model):
     warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE, related_name='inventory_warehouse')
     available_quantity = models.PositiveIntegerField()
     reserved_quantity = models.PositiveIntegerField(default=0)
+    minimum_quatity_level = models.DecimalField(default=0, decimal_places=2, max_digits=10)
+    reorder_level = models.DecimalField(default=0, decimal_places =2, max_digits=10)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

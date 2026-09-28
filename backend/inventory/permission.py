@@ -1,6 +1,8 @@
 from rest_framework.permissions import BasePermission
 from users.models import User
 
+
+# create the login permission
 class IsAllowedAdmin(BasePermission):
     def has_permission(self, request, view):
         if not request.user.is_authenticated:
@@ -14,7 +16,22 @@ class IsAllowedAdmin(BasePermission):
 
         return request.user.role in allowed_host
 
+# create the product permission 
 class IsProductManager(BasePermission):
+    def has_permission(self, request, view):
+        if not request.user.is_authenticated:
+            return False
+
+        allowed_host = [
+            User.Role.ADMIN,
+            User.Role.MANAGER,
+            User.Role.STORE_KEEPER
+        ]
+
+        return request.user.role in allowed_host
+
+# create the stock transaction permission
+class IsStockManager(BasePermission):
     def has_permission(self, request, view):
         if not request.user.is_authenticated:
             return False

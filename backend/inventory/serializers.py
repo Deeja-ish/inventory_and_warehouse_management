@@ -2,6 +2,7 @@ from .models import Category, Product, Inventory, StockTransaction
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from django.db import transaction
+from inventory.models import Warehouse
 
 # create the category serializer
 class CategorySerializers(serializers.ModelSerializer):
@@ -34,7 +35,11 @@ class ProductSerializer(serializers.ModelSerializer):
         # check the request and the user
         if request and hasattr(request, "user") and request.user.is_authenticated:
             if "company" in self.fields:
-                self.fields['category'].queryset = Category.objects.filter(company = request.user.company)
+                if not getattr(request.user, "is_system_admin", False):
+                    self.fields['category'].queryset = Category.objects.filter(company = request.user.company)
+                else:
+                    self.fields['category'].queryset = Category.objects.all()
+                
 
         # validate the users data 
     def validate(self, attrs):
@@ -54,25 +59,30 @@ class StockTransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = StockTransaction
         fields = "__all__"
-        read_only_fields = ("quantity_before", "quantity_after", "created_at", "updated_at")
+        read_only_fields = ("quantity_before", "quantity_after", "created_at", "updated_at", "user")
 
     @transaction.atomic
     def create(self, validated_data):
+        request = self.context.get("request")
+
         product = validated_data['product']
         quantity = validated_data['quantity']
         warehouse = validated_data['warehouse']
         reason = validated_data['reason']
         transaction_type = validated_data['transaction_type']
-        user = validated_data['user']
+        user = request.user 
+
+        if quantity <= 0:
+            raise ValueError("Quantity must be greater than zero for stock transactions.")
+
+        inventory = Inventory.objects.filter(product=product, warehouse=warehouse).first()
 
         try:
-            inventory = Inventory.objects.filter(product=product, warehouse=warehouse).first()
-
             # check if the inventory does not exist 
             if inventory is None:
                 if transaction_type == StockTransaction.TransactionType.RECIEVE and quantity > 0:
                     # get the current products quantity
-                    add_inventory =Inventory.objects.create(
+                    inventory =Inventory.objects.create(
                         product = product,
                         warehouse = warehouse,
                         available_quantity = quantity
@@ -88,7 +98,7 @@ class StockTransactionSerializer(serializers.ModelSerializer):
                         reason = reason
                     )
 
-                    return add_inventory, add_stock
+                    return add_stock
 
                 else:
                     raise ValidationError("Inventory does not exist for the given product and warehouse.")
@@ -171,13 +181,88 @@ class StockTransactionSerializer(serializers.ModelSerializer):
             raise ValidationError(f"Error processing stock transaction: {str(e)}")
 
 
+    def __init__(self, *args, **kwags):
+        super().__init__(*args, **kwags)
+
+        request = self.context.get("request")
+        if request.user and hasattr(request, "user") and request.user.is_authenticated:
+            if not getattr(request.user, "is_system_admin", False):
+                if "warehouse" in self.fields:
+                    self.fields['warehouse'].queryset = Warehouse.objects.filter(company=request.user.company)
+                if "product" in self.fields:
+                    self.fields['product'].queryset = Product.objects.filter(company=request.user.company)
+
+    # validate the users provided data 
+    def validate(self, attrs): 
+        request = self.context.get("request")
+        if request and not getattr(request.user, "is_system_admin", False):
+            warehouse = attrs.get('warehouse')
+            product = attrs.get("product")
+
+            if (request and request.user.company != warehouse.company) or (request.user.company != product.company) :
+                raise serializers.ValidationError({'error' : "The warehouse or product provided does not belong to your company"})
+
+        return attrs
+            
+
+
 
 # create the inventory serializer
 class InventorySerializer(serializers.ModelSerializer):
+    stock_status = serializers.SerializerMethodField()
     class Meta:
         model = Inventory
         fields = "__all__"
-        read_only_fields = ("product", "warehouse", "available_quantity", "reserved_quantity", "created_at", "updated_at", "is_active")
+        read_only_fields = ("available_quantity", "reserved_quantity", "created_at", "updated_at", "is_active")
+
+    # ensure the field avaliable belongs to the company
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        request = self.context.get("request")
+        if request and hasattr(request, "user") and request.user.is_authenticated:
+            if not getattr(request.user, "is_system_admin", False):
+                if 'warehouse' in self.fields:
+                    self.fields['warehouse'].queryset = Warehouse.objects.filter(company= request.user.company)
+
+                if 'product' in self.fields:
+                    self.fields['product'].queryset = Product.objects.filter(company=request.user.company)
+
+    # validate the user data 
+    def validate(self, attrs):
+        # validate the reorder level and minimu stock inventory 
+        reorder_level = attrs.get("reorder_level", getattr(self.instance, "reorder_level", None))
+        minimum_stock_level = attrs.get("minimum_quatity_level", getattr(self.instance, "minimum_quatity_level", None))
+
+        if reorder_level is not None and minimum_stock_level is not None:
+            if reorder_level <= minimum_stock_level:
+                raise serializers.ValidationError({"message" : "Reoder level must be greater the Minimum Stock level"})
+
+        # validate the product and the warehouse
+        request = self.context.get("request")
+        if request and not getattr(request.user, "is_system_admin", False):
+            product = attrs.get("product")
+            warehouse = attrs.get("warehouse")
+
+            if (request and request.user.company != product.company) or (request.user.company != warehouse.company):
+                raise serializers.ValidationError({"message" : "the user company and the product or warehouse company did not match"})
+        return attrs
+
+    # create a function to validate the stock status field 
+    def get_stock_status(self, obj):
+        available_quantity = obj.available_quantity or 0
+        reorder_level = obj.reorder_level or 0
+        minimum_stock_level = obj.minimum_quatity_level or 0
+
+        if available_quantity <= minimum_stock_level:
+            return "Critical"
+        elif available_quantity <= reorder_level:
+            return "Reorder"
+        else:
+            return "Normal"
+
+        
+        
 
     
 

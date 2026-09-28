@@ -43,8 +43,17 @@ INSTALLED_APPS = [
     'users',
     "companies",
     "warehouses",
-    "inventory"
+    "inventory",
+    "rest_framework_simplejwt.token_blacklist",
+    "django_filters"
 ]
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication"
+        "django_filters.rest_framework.DjangoFilterBackend"
+    ]
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

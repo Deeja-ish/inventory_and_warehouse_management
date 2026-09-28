@@ -65,4 +65,4 @@ class Warehouse(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.warehouse_name} -{self.warehouse_type} - {self.warehouse_code}"
+        return f"{self.warehouse_name} -{self.company} - {self.warehouse_code}"

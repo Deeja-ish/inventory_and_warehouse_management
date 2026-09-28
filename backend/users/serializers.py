@@ -1,5 +1,7 @@
 from .models import User
 from rest_framework import serializers
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.exceptions import TokenError
 
 # create a user serialiser
 class UserSerializer(serializers.ModelSerializer):
@@ -30,3 +32,43 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
+class UserDisplayProfileView(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("id", "username", "email", "first_name", "last_name","employee_ID", "company", "role", "is_system_admin")
+
+# make a change password serialiser
+class ChangePasswordSerializer(serializers.ModelSerializer):
+    old_password = serializers.CharField(write_only=True, required=True)
+    new_password = serializers.CharField(write_only=True, required=True)
+
+    def validate(self, attrs):
+        request = self.context.get("request")
+        if request and hasattr(request, 'user') and request.user.is_authenticated:
+            user = request.user 
+            old_password = attrs.get("old_password")
+            new_password = attrs.get("new_password")
+            # check if the old password is required 
+            if not user.check_password(old_password):
+                raise serializers.ValidationError({"passwords" : "Old Password is required"})
+            # check if old password is correct
+            if user.check_password(new_password):
+                raise serializers.ValidationError({"password" : "new and old passwords cannot be the same"})
+        return attrs
+
+# create logout serializer 
+class LogoutSerializer(serializers.Serializer):
+    refresh = serializers.CharField(required=True)
+
+    def validate(self, attrs):
+        self.token = attrs.get("refresh")
+        return attrs
+
+    def save(self, **kwags):
+        try:
+            token_obj = RefreshToken(self.token)
+            token_obj.blacklist()
+        except TokenError:
+            raise serializers.ValidationError({"Token" : "Token has expired or is not valid"})
+
+        
