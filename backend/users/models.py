@@ -11,6 +11,7 @@ class User(AbstractUser):
     employee_ID = models.CharField(max_length=20, blank=True, null=True)
     company = models.ForeignKey(Company, on_delete=models.SET_NULL, related_name='users', null=True)
     class Role(models.TextChoices):
+        STAFF = "Staff", "STAFF"
         ADMIN = "Admin", "ADMIN"
         MANAGER = "Manager", "MANAGER"
         STORE_KEEPER = "Store_keeper", "STORE_KEEPER"

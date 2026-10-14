@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Role</title>
+    <link rel="stylesheet" href="style/style.css">
+</head>
+<body>
+   <header class="app-title">
+    <h2 class="main-title">Update a user role</h2>
+    <p class="title-description">You can change the role of a user</p>
+   </header>
+   <main class="main_content">
+    <form id="update_form">
+        <div class="input-section">
+            <label for="employee">Choose the employee</label>
+            <select id="select_user">
+            </select>
+            <div class="user_details" id='user_details' style="display: none;">
+                <p><strong>Employee ID: </strong></p> <span id="detail_employee_id"></span>
+                <p><strong>Username: </strong></p> <span id="detail_username"></span>
+                <p><strong>First Name: </strong></p> <span id="detail_first_name"></span>
+                <p><strong>Last Name: </strong></p> <span id="detail_last_name"></span>
+                <p><strong>Company: </strong></p> <span id="detail_company"></span>
+                <p><strong>Current Role: </strong></p> <span id="detail_current_role"></span>
+            </div>
+        </div>
+        <div class="input-section">
+            <select name="choose_role" id="choose_role">
+            </select>
+        </div>
+        <button type="submit">Update Role</button>
+        <div id="response_message" class="response_message">
+        </div>
+    </form>
+   </main>
+</body>
+<script src="js/api.js"></script>
+<script src="js/update_role.js"></script>
+</html>

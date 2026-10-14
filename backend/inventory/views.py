@@ -1,13 +1,15 @@
 from rest_framework.viewsets import ModelViewSet
 from .models import Category, Product, Inventory, StockTransaction
 from .serializers import CategorySerializers, ProductSerializer, InventorySerializer, StockTransactionSerializer
-from .permission import IsAllowedAdmin, IsProductManager, IsStockManager
+from .permission import IsAllowedAdmin, IsProductManager, IsStockManager, IsInventoryManager
 from rest_framework.permissions import IsAuthenticated
-from users.permissions import IsCompanyAdmin
+from users.permissions import IsManagerOrAdmin
 from rest_framework.decorators import action
-from django.db.models import F, Sum, Count, Q, models 
+from django.db.models import F, Sum, Count, Q
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
+from django.db import models
+from rest_framework.views import APIView
 
 # Create your views here.
 class CategoryViewSet(ModelViewSet):
@@ -25,7 +27,7 @@ class CategoryViewSet(ModelViewSet):
         if self.action in ['create', 'update', 'partial_update']:
             return[IsAllowedAdmin()]
         if self.action == 'destroy':
-            return[IsCompanyAdmin()]
+            return[IsManagerOrAdmin()]
         return[IsAuthenticated()]
     
 
@@ -48,12 +50,35 @@ class ProductViewSet(ModelViewSet):
         if self.action in ['create', 'update', 'partial_update']:
             return [IsProductManager()]
         if self.action == 'destroy':
-            return [IsCompanyAdmin()]
+            return [IsManagerOrAdmin()]
         return [IsAuthenticated()]
+
+    # create a route to get the summary of products
+    @action(detail=False, methods=['get'])
+    def summary(self, request):
+        products = self.get_queryset()
+        # get the totalproducts of that company 
+        summary = products.aggregate(
+            total_products = Count("id")
+        )
+        return Response(summary)
+
+# get the product types
+class ProductTypeView(APIView):
+    def get(self, request):
+        product_types = Product.ProductType.choices
+        return Response(product_types, status=status.HTTP_200_OK)
+
+# get the unit types
+class UnitTypeView(APIView):
+    def get(self, request):
+        unit_types = Product.UnitType.choices
+        return Response(unit_types, status=status.HTTP_200_OK)
+    
 
 class InventoryViewSet(ModelViewSet):
     serializer_class = InventorySerializer
-    http_method_names = ['get']
+    http_method_names = ['get', "patch"]
 
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["product", "warehouse"]
@@ -65,14 +90,29 @@ class InventoryViewSet(ModelViewSet):
             return Inventory.objects.all()
         return Inventory.objects.filter(product__company= self.request.user.company)
 
+    def get_permissions(self):
+        if self.action == ['partial_update']:
+            return [IsInventoryManager()]
+        return [IsAuthenticated()]
+
     @action(detail=False, methods=['get'])
     def low_stock(self, request):
         inventory = self.get_queryset().filter(
-            available_quantity__Ite=F("reorder_level")
+            available_quantity__lte=F("reorder_level")
         )
         serializer = self.get_serializer(inventory, many=True)
 
         return Response(serializer.data)
+    @action(detail=False, methods=['get'])
+    def summary(self, request):
+        inventory = self.get_queryset()
+
+        summary = inventory.aggregate(
+            total_inventory = Count('id')
+        )
+
+        return Response(summary)
+
 
 
 
@@ -80,7 +120,7 @@ class StockTransactionViewSet(ModelViewSet):
     serializer_class = StockTransactionSerializer
 
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['products', "warehouse", 'transaction_type']
+    filterset_fields = ['product', "warehouse", 'transaction_type']
 
     def get_queryset(self):
         if not self.request.user.is_authenticated:
@@ -107,20 +147,18 @@ class StockTransactionViewSet(ModelViewSet):
             total_transaction = Count("id"),
 
             total_received = Sum("quantity", filter=models.Q(
-                StockTransaction.TransactionType.RECIEVE
+                transaction_type = StockTransaction.TransactionType.RECIEVE
             )),
             total_issued = Sum("quantity", filter=models.Q(
-                StockTransaction.TransactionType.ISSUE
+                transaction_type=StockTransaction.TransactionType.ISSUE
             )),
             total_adjustment = Sum("quantity", filter=models.Q(
-                StockTransaction.TransactionType.ADJUSTMENT
+                transaction_type=StockTransaction.TransactionType.ADJUSTMENT
             )),
             total_return = Sum("quantity", filter=models.Q(
-                StockTransaction.TransactionType.RETURN 
+                transaction_type=StockTransaction.TransactionType.RETURN 
             ))
         )
-
-        
         return Response(summary)
 
     

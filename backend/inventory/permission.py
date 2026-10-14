@@ -43,3 +43,15 @@ class IsStockManager(BasePermission):
         ]
 
         return request.user.role in allowed_host
+
+class IsInventoryManager(BasePermission):
+    def has_permission(self, request, view):
+        if not request.user.is_authenticated:
+            return None
+
+        allowed_host = [
+            User.Role.ADMIN,
+            User.Role.MANAGER
+        ]
+
+        return request.user.role in allowed_host

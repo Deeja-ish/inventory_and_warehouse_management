@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management System</title>
+    <link rel="stylesheet" href="style/style.css">
+</head>
+<body>
+    <header class="title">
+        <h2 class="title-header">Register your Company</h2>
+        <p class="title-head">Create your companies account to manage ypur inventory effectively</p>
+    </header>
+    <main id="main-container">
+        <form method="post" id="create_company">
+            <div class="input-section">
+                <label for="company_name">Company Name:</label>
+                <input type="text" id="company_name" name="company_name" required>
+            </div>
+            <div class="input-container">
+                <label for="registration_number">Registration Number:</label>
+                <input type="text" name="registration_number" id="registration_number" required>
+            </div>
+            <div class="input-section">
+                <label for="email">Email:</label>
+                <input type="text" id="email" name="email" required>
+            </div>
+            <div class="input-section">
+                <label for="phone_number">Phone Number:</label>
+                <input type="number" name="phone_number" id="phone_number" required>
+            </div>
+            <div class="input-section">
+                <label for="address">Address:</label>
+                <textarea name="address" id="address" cols="30" rows="5" required></textarea>
+            </div>
+            <button type="submit"> Register Company</button>
+        </form>
+    </main>
+</body>
+<script src="js/company.js"></script>
+</html>

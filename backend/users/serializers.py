@@ -9,7 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(write_only=True)
     class Meta:
         model = User
-        fields = ['employee_ID', 'username', 'password', 'confirm_password','first_name', 'last_name', 'email', 'company', 'role', 'is_system_admin']
+        fields = ["id", 'employee_ID', 'username', 'password', 'confirm_password','first_name', 'last_name', 'email', 'company', 'role', 'is_system_admin']
 
         read_only_fields = ['employee_ID', 'is_active', 'created_at', 'updated_at']
 
@@ -35,7 +35,7 @@ class UserSerializer(serializers.ModelSerializer):
 class UserDisplayProfileView(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("id", "username", "email", "first_name", "last_name","employee_ID", "company", "role", "is_system_admin")
+        fields = ["id", "username", "email", "first_name", "last_name","employee_ID", "company", "role", "is_system_admin"]
 
 # make a change password serialiser
 class ChangePasswordSerializer(serializers.ModelSerializer):
@@ -64,7 +64,7 @@ class LogoutSerializer(serializers.Serializer):
         self.token = attrs.get("refresh")
         return attrs
 
-    def save(self, **kwags):
+    def save(self, **kwargs):
         try:
             token_obj = RefreshToken(self.token)
             token_obj.blacklist()

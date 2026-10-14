@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Page</title>
+    <link rel="stylesheet" href="style/style.css">
+</head>
+<body>
+    <section class="nav_bar">
+        <div class="username_display"></div>
+        <nav class="nav_section">
+            <ul class="nav_list">
+                <li><a href="product.html">Products</a></li>
+                <li><a href="category.html">Category</a></li>
+                <li><a href="warehouse.html">Warehouse</a></li>
+                <li><a href="stock_transaction.html">Stock Transaction</a></li>
+                <li><a href="inventory.html">Inventory</a></li>
+                <li><a href="low_stock.html">Low Stock</a></li>
+            </ul>
+        </nav>
+        <button><a href="update_role.html">Update Role</a></button>
+    </section>
+    <main>
+        <section class="summary_section">
+            <div class="action_summary">
+                <div class="individual_summary">
+                    <p>Products</p>
+                    <p id="product_total"></p>
+                </div>
+                <div class="individual_summary">
+                    <p>Inventory</p>
+                    <p id="inventory_total"></p>
+                </div>
+                <div class="individual_summary">
+                    <p>Warehouse</p>
+                    <p id="warehouse_total"></p>
+                </div>
+                <div class="individual_summary">
+                    <p>Low Stock</p>
+                    <p id="low_stock_summary"></p>
+                </div>
+            </div>
+        </section>
+        <section class="recent_transactions">
+            <table class="transactions_table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Warehouse</th>
+                        <th>Transaction Type</th>
+                        <th>Quantity</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody id="transaction_body">
+                </tbody>
+            </table>
+        </section>
+        <section class="quick_actions">
+            <p>Quick Actions</p>
+            <button><a href="product.html">View Products</a></button>
+            <button><a href="category.html">View Category</a></button>
+            <button><a href="stock_transaction.html">View Stock Transactions</a></button>
+        </section>
+    </main>
+</body>
+<script src="js/api.js"></script>
+<script src="js/dashboard.js"></script>
+</html>

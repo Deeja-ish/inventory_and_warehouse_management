@@ -1,7 +1,7 @@
 from .models import User
 from rest_framework import serializers
 from .models import Warehouse
-
+from companies.models import Company
 class WarehouseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Warehouse
@@ -9,8 +9,8 @@ class WarehouseSerializer(serializers.ModelSerializer):
         read_only_fields = ('warehouse_code', 'created_at', 'updated_at', 'is_active')
 
     # save the current serializer
-    def __init__(self, *args, **kwags):
-        super().__init__(*args, **kwags)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         # safetly get the request object
         request = self.context.get("request")
 
@@ -20,6 +20,7 @@ class WarehouseSerializer(serializers.ModelSerializer):
                     self.fields['manager'].queryset = User.objects.filter(company=request.user.company, role=User.Role.MANAGER)
                 else:
                     self.fields['manager'].queryset = User.objects.filter(role=User.Role.MANAGER)
+    
 
     # validate the submitted request
     def validate(self, attrs):
