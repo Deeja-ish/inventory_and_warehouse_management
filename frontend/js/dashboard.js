@@ -136,3 +136,18 @@ async function show_transaction_history(){
 document.addEventListener("DOMContentLoaded", ()=> {
     show_products(), show_inventory(), show_warehouse(), show_lowstock(), show_transaction_history()
 })
+
+// get the update role to change on checking ths user status 
+const update_role_form = document.getElementById("update_role_form")
+
+update_role_form.addEventListener("click", async function (e) {
+    let allowed_role = ['Manager', 'Admin', "Super_Admin"]
+
+    if(!allowed_role.includes(user_role)){
+        e.preventDefault()
+        e.stopPropagation()
+        alert("Your role of " + user_role + " Does not allow you to perform this action.")
+        return
+    }
+    window.location.href = "update_role.html"
+})

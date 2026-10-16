@@ -54,3 +54,22 @@ async function authenticateFetch(url, options={}) {
     }
     return response
 }
+
+let user_role = localStorage.getItem("user_role")
+// define a functio to get all the users information
+async function get_user(){
+    const request = await authenticateFetch(`${BASE_URL}api/profile/`, {
+        method : "GET", 
+        credentials : "include"
+    })
+    const response = await request.json()
+    if(request.ok){
+        console.log(response)
+        localStorage.setItem("user_role", response.role)
+    }else{
+        console.log("error fetching users profile")
+    }
+}
+
+// get the saved user role 
+get_user()

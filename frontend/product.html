@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Page</title>
+    <link rel="stylesheet" href="style/style.css">
 </head>
 
 <body>
@@ -13,41 +14,56 @@
         <p class="title-description"> View and search for your companies different products here</p>
     </header>
     <div class="product_navigate">
-        <input type='search' id="search_product">
+        <input type='search' id="search_product" placeholder="search for a product.....">
         <button id="add_product">Add Product</button>
-        <form id="add_product_form" , class="add_product_from" style="display: none;">
+    </div>
+    <main class="main-conta">
+        <form id="add_product_form" , class="add_product_form" style="display: none;">
+            <h2 class ='product_header'>Add Product</h2>
             <div class="input-section">
                 <label for="product_name">Product Name:</label>
-                <input type="text" name='product_name' required>
+                <input type="text" name='product_name' required id="product_name">
             </div>
             <div class="input-section">
                 <label for="category">Category</label>
                 <select name="category" id="category"></select>
             </div>
             <div class="input-section">
-                <label for="sku">Sku:</label>
-                <input type="text" name="sku" id="sku" required>
-            </div>
-            <div class="input-section">
                 <label for="product-type">Product Type:</label>
                 <select name="product_type" id="product_type"></select>
             </div>
-            <div class="input-section">
-                <label for="unit_type">Unit Type</label>
-                <select name="unit_type" id="unit_type"></select>
-            </div>
             <div class="input-select">
                 <label for="unit_of_measure">Unit of measure</label>
-                <input type="text" name="unit_of_measure" id="unit_of_measure">
+                <select name="unit_of_measure" id="unit_of_measure"></select>
             </div>
             <div class="input-select">
-                <label for="product_description"></label>
-                
+                <label for="product_description">Product Description</label>
+                <textarea name="product_description" id="product_description"></textarea>
             </div>
+            <div class="input-select">
+                <label for="reorder_level">Reorder Level:</label>
+                <input type="text", id="reorder_level">
+            </div>
+            <button type="submit" id="create_button">Creat Product</button>
+            <button type="button" id="cancle_button" style="display: none;">cancle</button>
         </form>
-        <main class="main-content"></main>
-    </div>
-    <main class="main_content"></main>
+        <table id="product_table">
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Category</th>
+                    <th>SKU</th>
+                    <th>Product Type</th>
+                    <th>Unit of Measure</th>
+                    <th>Product Description</th>
+                    <th>Reorder Level</th>
+                </tr>
+            </thead>
+            <tbody id="product_type_body">
+            </tbody>
+        </table>
+    </main>
 </body>
-
+<script src="js/api.js"></script>
+<script src="js/product.js"></script>
 </html>

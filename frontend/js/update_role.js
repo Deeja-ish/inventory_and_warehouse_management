@@ -139,3 +139,4 @@ update_form.addEventListener("submit", async function (e) {
         console.error("Network error retrieving user", error)
     }
 })
+
