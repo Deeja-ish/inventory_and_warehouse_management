@@ -10,6 +10,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 from django.db import models
 from rest_framework.views import APIView
+from rest_framework import status
 
 # Create your views here.
 class CategoryViewSet(ModelViewSet):
@@ -114,8 +115,6 @@ class InventoryViewSet(ModelViewSet):
         return Response(summary)
 
 
-
-
 class StockTransactionViewSet(ModelViewSet):
     serializer_class = StockTransactionSerializer
 
@@ -135,7 +134,7 @@ class StockTransactionViewSet(ModelViewSet):
         if self.action in ['create', 'update', 'partial_update']:
             return[IsStockManager()]
         if self.action == "destroy":
-            return [IsCompanyAdmin()]
+            return [IsManagerOrAdmin()]
         return [IsAuthenticated()]
 
     # create a summary to return the aggregrate of all transactions
@@ -161,5 +160,5 @@ class StockTransactionViewSet(ModelViewSet):
         )
         return Response(summary)
 
-    
+
     

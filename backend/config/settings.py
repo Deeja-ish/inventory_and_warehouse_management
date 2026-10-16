@@ -107,7 +107,6 @@ DATABASES = {
         'PASSWORD' : config("DATABASE_PASSWORD"),
         'PORT' : config("DATABASE_PORT"),
         'USER' : config("DATABASE_USER")
-
     }
 }
 

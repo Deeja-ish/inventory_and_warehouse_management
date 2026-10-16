@@ -9,6 +9,6 @@ urlpatterns = [
     path("", include(router.urls)),
     path("profile/", ProfileAPIView.as_view()),
     path("change_password/", ChangePasswordView.as_view()),
-    path("get_roles/", GetRolesView.as_view())
+    path("get_roles/", GetRolesView.as_view()),
     
 ]

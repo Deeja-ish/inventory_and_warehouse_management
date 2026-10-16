@@ -123,3 +123,7 @@ class GetRolesView(APIView):
     def get(self, request):
         user_category = User.Role.choices
         return Response(user_category, status=status.HTTP_200_OK)
+
+
+
+        

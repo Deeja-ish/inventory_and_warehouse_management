@@ -71,4 +71,5 @@ class LogoutSerializer(serializers.Serializer):
         except TokenError:
             raise serializers.ValidationError({"Token" : "Token has expired or is not valid"})
 
-        
+
+# a serialiser to show user
