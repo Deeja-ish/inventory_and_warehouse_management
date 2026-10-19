@@ -93,7 +93,7 @@ async function load_unit_measurment() {
 // display the form base on user's role
 const add_product_form = document.getElementById("add_product_form")
 const cancle_button = document.getElementById("cancle_button")
-let product_create_roles = ['Manager', "Super_Admin", "Store_Keeper", "Admin"]
+let product_create_roles = ['Manager', "Super_Admin", "Store_keeper", "Admin"]
 document.getElementById("add_product").addEventListener("click", async function (e) {
     e.preventDefault()
     e.stopPropagation()
@@ -116,7 +116,7 @@ cancle_button.addEventListener("click", async function () {
 })
 
 // create a function to show the products in a table
-const products_table = document.getElementById("product_type_body")
+const products_table = document.getElementById("table_body")
 async function load_products_table() {
     products_table.innerHTML = ""
     try {
@@ -253,27 +253,6 @@ if(add_product_form){
             }
         } catch (error) {
             console.error(error)
-        }
-    })
-}
-
-// make the search bar respond
-const search_content = document.getElementById("search_product")
-if(search_product) {
-    search_product.addEventListener("input", function(e){
-        const search_value = e.target.value.toLowerCase().trim()
-        const row_values = products_table.querySelectorAll()
-
-        if(row_values){
-            row_values.forEach(row =>{
-                const row_text = row.textContent.toLowerCase()
-
-                if(row_text.includes(search_value)){
-                    row.style.display = ""
-                }else{
-                    row.style.display = "none";
-                }
-            })
         }
     })
 }

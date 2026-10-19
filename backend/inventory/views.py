@@ -26,7 +26,7 @@ class CategoryViewSet(ModelViewSet):
         if self.action in ['list', 'retrieve']:
             return[IsAuthenticated()]
         if self.action in ['create', 'update', 'partial_update']:
-            return[IsAllowedAdmin()]
+            return[IsInventoryManager()]
         if self.action == 'destroy':
             return[IsManagerOrAdmin()]
         return[IsAuthenticated()]

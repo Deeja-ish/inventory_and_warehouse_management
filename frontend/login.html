@@ -4,24 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventory System</title>
+
+    <!-- STEP 1: Load Bootstrap's CSS from a CDN. This one line gives you all the classes. -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Your own CSS comes AFTER Bootstrap, so anything you write there can override it. -->
     <link rel="stylesheet" href="style/style.css">
 </head>
-<body>
-    <header class="title">
-        <h2 class="title-header">Login Page</h2>
-        <p class="title-head">Login to your Account</p>
-    </header>
-    <main class="main-container">
-        <form action="post" id="login_form" class="'form">
-            <div id="input-section">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
+<body class="bg-light min-vh-100 d-flex align-items-center justify-content-center">
+    <main class="main-container card shadow-sm p-4" style="width: 100%; max-width: 400px;">
+
+        <!-- text-center = center the text,  mb-4 = margin-bottom size 4 -->
+        <header class="title text-center mb-4">
+            <!-- fw-bold = bold font,  text-primary = Bootstrap's blue -->
+            <h2 class="title-header fw-bold text-primary">Login Page</h2>
+            <!-- text-muted = grey text,  mb-0 = remove the default bottom margin -->
+            <p class="title-head text-muted mb-0">Login to your Account</p>
+        </header>
+
+        <form action="post" id="login_form" class="form">
+            <!-- mb-3 = space below each field -->
+            <div id="input-section" class="mb-3">
+                <!-- form-label = styles the label nicely -->
+                <label for="username" class="form-label">Username:</label>
+                <!-- form-control = full-width, rounded input with a focus glow -->
+                <input type="text" id="username" name="username" class="form-control" required>
             </div>
-            <div id="input-section">
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
+            <div id="input-section" class="mb-3">
+                <label for="password" class="form-label">Password:</label>
+                <input type="password" id="password" name="password" class="form-control" required>
             </div>
-            <button type="submit">Login</button>
+            <button type="submit" class="btn btn-primary w-100">Login</button>
         </form>
     </main>
 </body>

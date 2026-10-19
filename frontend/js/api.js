@@ -56,6 +56,7 @@ async function authenticateFetch(url, options={}) {
 }
 
 let user_role = localStorage.getItem("user_role")
+console.log(user_role)
 // define a functio to get all the users information
 async function get_user(){
     const request = await authenticateFetch(`${BASE_URL}api/profile/`, {
@@ -73,3 +74,21 @@ async function get_user(){
 
 // get the saved user role 
 get_user()
+
+// create a function for the search input 
+let search_input = document.getElementById("search_bar")
+if(search_input){
+    search_input.addEventListener("input", function(e){
+        let search_value = e.target.value.toLowercase()
+        let row_content = document.querySelectorAll(".tabel_body")
+
+        row_content.forEach(row => {
+            let row_values = row.textContent.toLowerCase()
+            if(row_values.includes(search_value)){
+                row.style.display = ""
+            }else{
+                row.style.display = "none";
+            }
+        })
+    })
+}

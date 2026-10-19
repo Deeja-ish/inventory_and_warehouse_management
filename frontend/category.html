@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category Page</title>
+    <link rel="stylesheet" href="style/style.css">
+</head>
+<body>
+    <header class="app-title">
+        <h2 class="main-title">Catgory Page</h2>
+        <p class="title-description">View and search through the companies category of products</p>
+    </header>
+    <div>
+        <input type="search" id="search_bar" class="search-bar" placeholder="Browse category">
+        <button type="button" id="add_category">Add Category</button>
+    </div>
+    <main class="main-conatiner">
+        <form id="category_form" class="add_form" style="display: none;">
+            <h2 class='form_title'>Add Category</h2>
+            <div class="input-section">
+                <label for="category_name">Category Name:</label>
+                <input type="text" name='category_name' id="category_name" required>
+            </div>
+            <div class="input-section">
+                <label for="category_description">Catgory Description</label>
+                <textarea name="category_description" id="category_description" cols="5" rows="10"></textarea>
+            </div>
+            <button type="submit" id="create_category">Create Category</button>
+            <button type="button" id="cancle_category">Cancle</button>
+        </form>
+        <table id="category_table">
+            <thead>
+                <tr>
+                    <th>Category Name</th>
+                    <th>Catgeory Description</th>
+                </tr>
+            </thead>
+            <tbody class="table_body"></tbody>
+        </table>
+    </main>
+</body>
+<script src="js/api.js"></script>
+<script src="js/category.js"></script>
+</html>

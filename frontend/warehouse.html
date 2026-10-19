@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warehouse Page</title>
+    <link rel="stylesheet" href="style/style.css">
+</head>
+<body>
+    <header class="app-title">
+        <h2 class="main-title">Warehouse Page</h2>
+        <p class="title-description">View and search for you companies available warehouse</p>
+    </header>
+    <div class="warehouse_navigate">
+        <input type="search" id="search_bar" placeholder="seaech for category">
+        <button type="button">Add Warehouse</button>
+    </div>
+    <form id="warehouse_form" class="warehouse_form" style="display: none;">
+        <h2 id="warehouse_title">Add Warehouse</h2>
+        <div class="input-section">
+            <label for="warehouse_name">Warehouse Name:</label>
+            <input type="text" id="warehouse_name" required>
+        </div>
+        <div class="input-section">
+            <label for="city">City:</label>
+            <input type="text" id="city" required>
+        </div>
+        <div class="input-section">
+            <label for="address">Address:</label>
+            <input type="text" id="address">
+        </div>
+        <div class="input-section">
+            <label for="state">State:</label>
+            <input type="text" id="state">
+        </div>
+        <div class="input-section">
+            <label for="country">Country:</label>
+            <input type="text" id="country">
+        </div>
+        <div class="input-section">
+            <label for="warehouse_type">Warehouse Type:</label>
+            <select name="warehouse_type" id="warehouse_type"></select>
+        </div>
+        <div class="input-section">
+            <label for="manager">Manager:</label>
+            <select name="manager" id="manager"></select>
+        </div>
+        <button type="submit">Submit</button>
+        <button type="button" id="cancle_button"></button>
+    </form>
+    <div class="table_section">
+        <table>
+            <thead>
+                <tr>
+                    <td>Warehouse Name</td>
+                    <td>Warehosue Code</td>
+                    <td>City</td>
+                    <td>Address</td>
+                    <td>State</td>
+                    <td>Country</td>
+                    <td>Warehouse Type</td>
+                    <td>Manager</td>
+                </tr>
+            </thead>
+            <td class="table_body"></td>
+        </table>
+    </div>
+</body>
+<script src="js/api.js"></script>
+<script src="js/warehouse.js"></script>
+</html>
