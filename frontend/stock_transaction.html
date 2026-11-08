@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Transactions | StockWise Inventory</title>
+    <meta name="description" content="Receive, issue, return and adjust stock across warehouses, and filter the full transaction history.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style/style.css">
+</head>
+<body>
+<div class="app-shell">
+    <aside class="sidebar offcanvas-lg offcanvas-start" tabindex="-1" id="sidebar" aria-label="Main navigation">
+        <div class="d-flex align-items-center justify-content-between pe-3">
+            <a href="dashboard.html" class="sidebar-brand"><span class="brand-mark"><i class="bi bi-box-seam"></i></span>StockWise</a>
+            <button type="button" class="btn-close d-lg-none" data-bs-dismiss="offcanvas" data-bs-target="#sidebar" aria-label="Close"></button>
+        </div>
+        <nav class="sidebar-nav">
+            <p class="sidebar-label">Overview</p>
+            <a class="sidebar-link" href="dashboard.html"><i class="bi bi-grid-1x2"></i>Dashboard</a>
+            <p class="sidebar-label">Catalog</p>
+            <a class="sidebar-link" href="product.html"><i class="bi bi-box"></i>Products</a>
+            <a class="sidebar-link" href="category.html"><i class="bi bi-tags"></i>Categories</a>
+            <p class="sidebar-label">Operations</p>
+            <a class="sidebar-link" href="warehouse.html"><i class="bi bi-buildings"></i>Warehouses</a>
+            <a class="sidebar-link active" href="stock_transaction.html"><i class="bi bi-arrow-left-right"></i>Stock Transactions</a>
+            <a class="sidebar-link" href="inventory.html"><i class="bi bi-clipboard-data"></i>Inventory</a>
+            <a class="sidebar-link" href="low_stock.html"><i class="bi bi-exclamation-triangle"></i>Low Stock</a>
+            <p class="sidebar-label">Admin</p>
+            <a class="sidebar-link" href="update_role.html"><i class="bi bi-person-gear"></i>Update Role</a>
+        </nav>
+    </aside>
+
+    <div class="app-main">
+        <header class="topbar">
+            <div class="d-flex align-items-center gap-2">
+                <button class="btn btn-light-soft d-lg-none px-2 py-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar" aria-label="Open menu">
+                    <i class="bi bi-list fs-5"></i>
+                </button>
+                <span class="topbar-crumb">Operations / <strong>Stock Transactions</strong></span>
+            </div>
+            <div class="user-chip"><span class="avatar"><i class="bi bi-person"></i></span>My Account</div>
+        </header>
+
+        <main class="app-content main-container">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Stock Transactions</h1>
+                    <p class="page-subtitle">View, receive and transfer stock across your warehouses.</p>
+                </div>
+                <button type="button" id="transfer_stock" class="btn btn-primary"><i class="bi bi-arrow-left-right me-1"></i>New Transaction</button>
+            </div>
+
+            <!-- Search + filters -->
+            <div class="surface-card toolbar transaction_navigate fiter_div">
+                <div class="search-wrap">
+                    <i class="bi bi-search"></i>
+                    <input type="search" id="search_bar" class="form-control" placeholder="Search stock transactions...">
+                </div>
+                <select name="filter_warehouse" id="filter_warehouse" class="form-select" aria-label="Filter by warehouse">
+                    <option value="">All Warehouses</option>
+                </select>
+                <select name="filter_product" id="filter_product" class="form-select" aria-label="Filter by product">
+                    <option value="">All Products</option>
+                </select>
+                <select name="filter_transaction" id="filter_transaction_type" class="form-select" aria-label="Filter by transaction type">
+                    <option value="">All Types</option>
+                </select>
+            </div>
+
+            <!-- Create pop-up (shown and hidden by stock_transaction.js) -->
+            <form id="stock_transaction_form" class="form-panel" style="display: none;">
+                <h2 class="panel-title header">Create Stock Transaction</h2>
+                <p class="panel-subtitle">Receive, issue, return or adjust available stock.</p>
+                <div class="row g-3">
+                    <div class="col-md-6 input-section">
+                        <label for="product_name" class="form-label">Product</label>
+                        <select name="product_name" id="product_name" class="form-select" required></select>
+                    </div>
+                    <div class="col-md-6 input-section">
+                        <label for="warehouse_name" class="form-label">Warehouse</label>
+                        <select name="warehouse_name" id="warehouse_name" class="form-select" required></select>
+                    </div>
+                    <div class="col-md-6 input-section">
+                        <label for="transaction_type" class="form-label">Transaction Type</label>
+                        <select name="transaction_type" id="transaction_type" class="form-select" required></select>
+                    </div>
+                    <div class="col-md-6 input-section">
+                        <label for="quantity" class="form-label">Quantity</label>
+                        <input type="number" min="1" name="quantity" id="quantity" class="form-control" required>
+                    </div>
+                    <div class="col-12 input-section">
+                        <label for="reason" class="form-label">Reason</label>
+                        <textarea name="reason" id="reason" class="form-control" rows="3" placeholder="Optional note, e.g. supplier delivery #1042"></textarea>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="cancle_button" class="btn btn-light-soft">Cancel</button>
+                    <button type="submit" id="submit_button" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+
+            <div class="surface-card table-card">
+                <div class="table-responsive">
+                    <table id="stock_showcase_table" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Warehouse</th>
+                                <th>Product</th>
+                                <th>Type</th>
+                                <th>Qty Before</th>
+                                <th>Qty After</th>
+                                <th>Quantity</th>
+                                <th>Reason</th>
+                                <th>Date</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody class="table_body" id="stock_table"></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/api.js"></script>
+<script src="js/stock_transaction.js"></script>
+</body>
+</html>

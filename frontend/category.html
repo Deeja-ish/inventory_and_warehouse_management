@@ -3,43 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Category Page</title>
+    <title>Categories | StockWise Inventory</title>
+    <meta name="description" content="Browse, create and edit the product categories used across your company's inventory.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style/style.css">
 </head>
 <body>
-    <header class="app-title">
-        <h2 class="main-title">Catgory Page</h2>
-        <p class="title-description">View and search through the companies category of products</p>
-    </header>
-    <div>
-        <input type="search" id="search_bar" class="search-bar" placeholder="Browse category">
-        <button type="button" id="add_category">Add Category</button>
+<div class="app-shell">
+    <aside class="sidebar offcanvas-lg offcanvas-start" tabindex="-1" id="sidebar" aria-label="Main navigation">
+        <div class="d-flex align-items-center justify-content-between pe-3">
+            <a href="dashboard.html" class="sidebar-brand"><span class="brand-mark"><i class="bi bi-box-seam"></i></span>StockWise</a>
+            <button type="button" class="btn-close d-lg-none" data-bs-dismiss="offcanvas" data-bs-target="#sidebar" aria-label="Close"></button>
+        </div>
+        <nav class="sidebar-nav">
+            <p class="sidebar-label">Overview</p>
+            <a class="sidebar-link" href="dashboard.html"><i class="bi bi-grid-1x2"></i>Dashboard</a>
+            <p class="sidebar-label">Catalog</p>
+            <a class="sidebar-link" href="product.html"><i class="bi bi-box"></i>Products</a>
+            <a class="sidebar-link active" href="category.html"><i class="bi bi-tags"></i>Categories</a>
+            <p class="sidebar-label">Operations</p>
+            <a class="sidebar-link" href="warehouse.html"><i class="bi bi-buildings"></i>Warehouses</a>
+            <a class="sidebar-link" href="stock_transaction.html"><i class="bi bi-arrow-left-right"></i>Stock Transactions</a>
+            <a class="sidebar-link" href="inventory.html"><i class="bi bi-clipboard-data"></i>Inventory</a>
+            <a class="sidebar-link" href="low_stock.html"><i class="bi bi-exclamation-triangle"></i>Low Stock</a>
+            <p class="sidebar-label">Admin</p>
+            <a class="sidebar-link" href="update_role.html"><i class="bi bi-person-gear"></i>Update Role</a>
+        </nav>
+    </aside>
+
+    <div class="app-main">
+        <header class="topbar">
+            <div class="d-flex align-items-center gap-2">
+                <button class="btn btn-light-soft d-lg-none px-2 py-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar" aria-label="Open menu">
+                    <i class="bi bi-list fs-5"></i>
+                </button>
+                <span class="topbar-crumb">Catalog / <strong>Categories</strong></span>
+            </div>
+            <div class="user-chip"><span class="avatar"><i class="bi bi-person"></i></span>My Account</div>
+        </header>
+
+        <main class="app-content main-container">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Categories</h1>
+                    <p class="page-subtitle">View and search through your company's product categories.</p>
+                </div>
+                <button type="button" id="add_category" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Add Category</button>
+            </div>
+
+            <div class="surface-card toolbar">
+                <div class="search-wrap">
+                    <i class="bi bi-search"></i>
+                    <input type="search" id="search_bar" class="form-control search-bar" placeholder="Browse categories...">
+                </div>
+            </div>
+
+            <!-- Create / edit pop-up (shown and hidden by category.js) -->
+            <form id="category_form" class="add_form form-panel" style="display: none;">
+                <h2 class="panel-title form_title">Add Category</h2>
+                <p class="panel-subtitle">Group similar products together.</p>
+                <div class="mb-3 input-section">
+                    <label for="category_name" class="form-label">Category Name</label>
+                    <input type="text" name="category_name" id="category_name" class="form-control" required>
+                </div>
+                <div class="input-section">
+                    <label for="category_description" class="form-label">Category Description</label>
+                    <textarea name="category_description" id="category_description" class="form-control" rows="4"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="cancle_category" class="btn btn-light-soft">Cancel</button>
+                    <button type="submit" id="create_category" class="btn btn-primary">Create Category</button>
+                </div>
+            </form>
+
+            <div class="surface-card table-card">
+                <div class="table-responsive">
+                    <!-- the table and tbody used to share id="category_table"; the id now lives only on tbody, which is what category.js fills -->
+                    <table id="category_showcase_table" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Category Name</th>
+                                <th>Category Description</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody class="table_body" id="category_table"></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
     </div>
-    <main class="main-conatiner">
-        <form id="category_form" class="add_form" style="display: none;">
-            <h2 class='form_title'>Add Category</h2>
-            <div class="input-section">
-                <label for="category_name">Category Name:</label>
-                <input type="text" name='category_name' id="category_name" required>
-            </div>
-            <div class="input-section">
-                <label for="category_description">Catgory Description</label>
-                <textarea name="category_description" id="category_description" cols="5" rows="10"></textarea>
-            </div>
-            <button type="submit" id="create_category">Create Category</button>
-            <button type="button" id="cancle_category">Cancle</button>
-        </form>
-        <table id="category_table">
-            <thead>
-                <tr>
-                    <th>Category Name</th>
-                    <th>Catgeory Description</th>
-                </tr>
-            </thead>
-            <tbody class="table_body"></tbody>
-        </table>
-    </main>
-</body>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="js/api.js"></script>
 <script src="js/category.js"></script>
+</body>
 </html>

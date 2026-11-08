@@ -3,39 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventory System</title>
+    <title>Log in | StockWise Inventory</title>
+    <meta name="description" content="Log in to your StockWise account to manage your company's inventory and warehouses.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- STEP 1: Load Bootstrap's CSS from a CDN. This one line gives you all the classes. -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <!-- Your own CSS comes AFTER Bootstrap, so anything you write there can override it. -->
     <link rel="stylesheet" href="style/style.css">
 </head>
-<body class="bg-light min-vh-100 d-flex align-items-center justify-content-center">
-    <main class="main-container card shadow-sm p-4" style="width: 100%; max-width: 400px;">
+<body>
+<div class="auth-shell">
+    <!-- Left brand panel (hidden on small screens) -->
+    <aside class="auth-aside">
+        <a href="index.html" class="sidebar-brand p-0 text-white"><span class="brand-mark"><i class="bi bi-box-seam"></i></span>StockWise</a>
+        <div>
+            <h2 class="mb-4">Every product, every warehouse, one dashboard.</h2>
+            <div class="auth-feature"><i class="bi bi-buildings"></i><div><strong>Multi-warehouse stock</strong><span>Track quantities per location in real time.</span></div></div>
+            <div class="auth-feature"><i class="bi bi-arrow-left-right"></i><div><strong>Full transaction history</strong><span>Every receive, issue, return and adjustment is logged.</span></div></div>
+            <div class="auth-feature"><i class="bi bi-shield-check"></i><div><strong>Role-based access</strong><span>Managers, store keepers and staff see what they need.</span></div></div>
+        </div>
+        <small class="text-white-50">&copy; StockWise Inventory</small>
+    </aside>
 
-        <!-- text-center = center the text,  mb-4 = margin-bottom size 4 -->
-        <header class="title text-center mb-4">
-            <!-- fw-bold = bold font,  text-primary = Bootstrap's blue -->
-            <h2 class="title-header fw-bold text-primary">Login Page</h2>
-            <!-- text-muted = grey text,  mb-0 = remove the default bottom margin -->
-            <p class="title-head text-muted mb-0">Login to your Account</p>
-        </header>
+    <div class="auth-panel">
+        <main class="main-container auth-card">
 
-        <form action="post" id="login_form" class="form">
-            <!-- mb-3 = space below each field -->
-            <div id="input-section" class="mb-3">
-                <!-- form-label = styles the label nicely -->
-                <label for="username" class="form-label">Username:</label>
-                <!-- form-control = full-width, rounded input with a focus glow -->
-                <input type="text" id="username" name="username" class="form-control" required>
-            </div>
-            <div id="input-section" class="mb-3">
-                <label for="password" class="form-label">Password:</label>
-                <input type="password" id="password" name="password" class="form-control" required>
-            </div>
-            <button type="submit" class="btn btn-primary w-100">Login</button>
-        </form>
-    </main>
-</body>
+            <!-- text-center = center the text,  mb-4 = margin-bottom size 4 -->
+            <header class="title mb-4">
+                <!-- fw-bold = bold font,  text-primary = Bootstrap's blue -->
+                <h1 class="title-header auth-title fw-bold">Welcome back</h1>
+                <!-- text-muted = grey text,  mb-0 = remove the default bottom margin -->
+                <p class="title-head auth-subtitle mb-0">Log in to your account to continue.</p>
+            </header>
+
+            <form action="post" id="login_form" class="form">
+                <!-- mb-3 = space below each field -->
+                <div class="input-section mb-3">
+                    <!-- form-label = styles the label nicely -->
+                    <label for="username" class="form-label">Username</label>
+                    <!-- form-control = full-width, rounded input with a focus glow -->
+                    <input type="text" id="username" name="username" class="form-control" placeholder="e.g. deeja_goni" required>
+                </div>
+                <div class="input-section mb-4">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2">Log in</button>
+            </form>
+
+            <p class="auth-footer-link">Don't have an account? <a href="register_page.html">Register as staff</a> or <a href="company.html">create a company</a></p>
+        </main>
+    </div>
+</div>
 <script src="js/login.js"></script>
+</body>
 </html>

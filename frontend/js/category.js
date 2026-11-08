@@ -2,12 +2,12 @@
 let current_id = null
 
 // display the form data 
-const category_table = document.getElementById("table_body")
+const category_table = document.getElementById("category_table")
 async function load_category_data() {
     category_table.innerHTML = ""
     try {
         const request = await authenticateFetch(`${BASE_URL}api/categories/`, {
-            methodS : "GET",
+            method : "GET",
             credentials : "include"
         })
         const response = await request.json()
@@ -95,11 +95,11 @@ if(category_form){
     
         let is_updating = current_id != null
         method = is_updating ? "PATCH" : "POST"
-        url = is_updating ? `api/categories/${current_id}` : "api/categories/"
+        url = is_updating ? `api/categories/${current_id}/` : "api/categories/"
     
         try{
             const request = await authenticateFetch(`${BASE_URL}${url}`, {
-                methods : method,
+                method : method,
                 headers : {
                     "Content-Type" : "application/json"
                 },

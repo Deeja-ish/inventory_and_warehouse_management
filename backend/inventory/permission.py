@@ -8,50 +8,12 @@ class IsAllowedAdmin(BasePermission):
         if not request.user.is_authenticated:
             return False
 
+        if getattr(request.user, "is_system_admin", False):
+            return True
         allowed_host = [
             User.Role.ADMIN,
             User.Role.MANAGER,
             User.Role.STORE_KEEPER
+
         ]
-
-        return request.user.role in allowed_host
-
-# create the product permission 
-class IsProductManager(BasePermission):
-    def has_permission(self, request, view):
-        if not request.user.is_authenticated:
-            return False
-
-        allowed_host = [
-            User.Role.ADMIN,
-            User.Role.MANAGER,
-            User.Role.STORE_KEEPER
-        ]
-
-        return request.user.role in allowed_host
-
-# create the stock transaction permission
-class IsStockManager(BasePermission):
-    def has_permission(self, request, view):
-        if not request.user.is_authenticated:
-            return False
-
-        allowed_host = [
-            User.Role.ADMIN,
-            User.Role.MANAGER,
-            User.Role.STORE_KEEPER
-        ]
-
-        return request.user.role in allowed_host
-
-class IsInventoryManager(BasePermission):
-    def has_permission(self, request, view):
-        if not request.user.is_authenticated:
-            return None
-
-        allowed_host = [
-            User.Role.ADMIN,
-            User.Role.MANAGER
-        ]
-
-        return request.user.role in allowed_host
+        return request.user.role in allowed_host 

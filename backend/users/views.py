@@ -76,6 +76,14 @@ class UserViewSet(ModelViewSet):
         target_user.save()
         return Response({"message" : "User Role and been updated successfully"}, status=status.HTTP_200_OK)
 
+    @action(detail=False, methods=['get'])
+    def get_manager(self, request):
+        company_manager = self.get_queryset()
+        managers = company_manager.filter(role=User.Role.MANAGER)
+
+        serializer = self.get_serializer(managers, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
             
 
 
@@ -90,14 +98,14 @@ class ProfileAPIView(APIView):
 # create a change password view
 class ChangePasswordView(APIView):
     permission_classes = [IsAuthenticated]
-    def put(self, request):
-        user = request.user 
-        serializer = ChangePasswordSerializer(user)
+    def put(self, request, **kwargs):
+        data = request.data
+        serializer = ChangePasswordSerializer(data=data, context={"request" : request})
 
         if serializer.is_valid():
-            new_password = serializer.validated_data.get(new_password)
+            user = request.user
             # set the new password 
-            user.set_password(new_password)
+            user.set_password(serializer.validated_data['new_password'])
             user.save()
 
             return Response({
@@ -114,7 +122,7 @@ class LogoutView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({"message" : "Logout has been Successful"}, status=status.HTTP_205_RESET_CONTENT)
-        return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # get a list of users category 

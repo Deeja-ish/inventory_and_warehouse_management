@@ -3,68 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Page</title>
+    <title>Dashboard | StockWise Inventory</title>
+    <meta name="description" content="Overview of your company's products, inventory, warehouses and recent stock transactions.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style/style.css">
 </head>
 <body>
-    <section class="nav_bar">
-        <div class="username_display"></div>
-        <nav class="nav_section">
-            <ul class="nav_list">
-                <li><a href="product.html">Products</a></li>
-                <li><a href="category.html">Category</a></li>
-                <li><a href="warehouse.html">Warehouse</a></li>
-                <li><a href="stock_transaction.html">Stock Transaction</a></li>
-                <li><a href="inventory.html">Inventory</a></li>
-                <li><a href="low_stock.html">Low Stock</a></li>
-            </ul>
+<div class="app-shell">
+    <!-- Sidebar: fixed on desktop, slide-in drawer on mobile -->
+    <aside class="sidebar offcanvas-lg offcanvas-start" tabindex="-1" id="sidebar" aria-label="Main navigation">
+        <div class="d-flex align-items-center justify-content-between pe-3">
+            <a href="dashboard.html" class="sidebar-brand"><span class="brand-mark"><i class="bi bi-box-seam"></i></span>StockWise</a>
+            <button type="button" class="btn-close d-lg-none" data-bs-dismiss="offcanvas" data-bs-target="#sidebar" aria-label="Close"></button>
+        </div>
+        <nav class="sidebar-nav nav_section">
+            <p class="sidebar-label">Overview</p>
+            <a class="sidebar-link active" href="dashboard.html"><i class="bi bi-grid-1x2"></i>Dashboard</a>
+            <p class="sidebar-label">Catalog</p>
+            <a class="sidebar-link" href="product.html"><i class="bi bi-box"></i>Products</a>
+            <a class="sidebar-link" href="category.html"><i class="bi bi-tags"></i>Categories</a>
+            <p class="sidebar-label">Operations</p>
+            <a class="sidebar-link" href="warehouse.html"><i class="bi bi-buildings"></i>Warehouses</a>
+            <a class="sidebar-link" href="stock_transaction.html"><i class="bi bi-arrow-left-right"></i>Stock Transactions</a>
+            <a class="sidebar-link" href="inventory.html"><i class="bi bi-clipboard-data"></i>Inventory</a>
+            <a class="sidebar-link" href="low_stock.html"><i class="bi bi-exclamation-triangle"></i>Low Stock</a>
+            <p class="sidebar-label">Admin</p>
+            <!-- dashboard.js checks the user's role before redirecting -->
+            <button type="button" class="sidebar-link" id="update_role_form"><i class="bi bi-person-gear"></i>Update Role</button>
         </nav>
-        <button type="button" id="update_role_form">Update Role</button>
-    </section>
-    <main class="main-container">
-        <section class="summary_section">
-            <div class="action_summary">
-                <div class="individual_summary">
-                    <p>Products</p>
-                    <p id="product_total"></p>
-                </div>
-                <div class="individual_summary">
-                    <p>Inventory</p>
-                    <p id="inventory_total"></p>
-                </div>
-                <div class="individual_summary">
-                    <p>Warehouse</p>
-                    <p id="warehouse_total"></p>
-                </div>
-                <div class="individual_summary">
-                    <p>Low Stock</p>
-                    <p id="low_stock_summary"></p>
-                </div>
+    </aside>
+
+    <div class="app-main">
+        <header class="topbar">
+            <div class="d-flex align-items-center gap-2">
+                <button class="btn btn-light-soft d-lg-none px-2 py-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar" aria-label="Open menu">
+                    <i class="bi bi-list fs-5"></i>
+                </button>
+                <span class="topbar-crumb">Workspace / <strong>Dashboard</strong></span>
             </div>
-        </section>
-        <section class="recent_transactions">
-            <table class="transactions_table">
-                <thead>
-                    <tr>
-                        <th>Product</th>
-                        <th>Warehouse</th>
-                        <th>Transaction Type</th>
-                        <th>Quantity</th>
-                        <th>Date</th>
-                    </tr>
-                </thead>
-                <tbody id="transaction_body">
-                </tbody>
-            </table>
-        </section>
-        <section class="quick_actions">
-            <p>Quick Actions</p>
-            <button><a href="product.html">View Products</a></button>
-            <button><a href="category.html">View Category</a></button>
-            <button><a href="stock_transaction.html">View Stock Transactions</a></button>
-        </section>
-    </main>
-</body>
+            <div class="user-chip"><span class="avatar"><i class="bi bi-person"></i></span><span class="username_display">My Account</span></div>
+        </header>
+
+        <main class="app-content main-container">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Dashboard</h1>
+                    <p class="page-subtitle">A quick snapshot of your stock, warehouses and recent activity.</p>
+                </div>
+                <a href="stock_transaction.html" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>New Transaction</a>
+            </div>
+
+            <!-- Summary cards -->
+            <section class="summary_section mb-4" aria-label="Summary">
+                <div class="row g-3 action_summary">
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="surface-card stat-card individual_summary">
+                            <div class="stat-icon indigo"><i class="bi bi-box"></i></div>
+                            <div>
+                                <p class="stat-label">Products</p>
+                                <p class="stat-value" id="product_total"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="surface-card stat-card individual_summary">
+                            <div class="stat-icon teal"><i class="bi bi-clipboard-data"></i></div>
+                            <div>
+                                <p class="stat-label">Inventory Records</p>
+                                <p class="stat-value" id="inventory_total"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="surface-card stat-card individual_summary">
+                            <div class="stat-icon amber"><i class="bi bi-buildings"></i></div>
+                            <div>
+                                <p class="stat-label">Warehouses</p>
+                                <p class="stat-value" id="warehouse_total"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="surface-card stat-card individual_summary">
+                            <div class="stat-icon rose"><i class="bi bi-exclamation-triangle"></i></div>
+                            <div>
+                                <p class="stat-label">Low Stock Items</p>
+                                <p class="stat-value" id="low_stock_summary"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="row g-3">
+                <!-- Recent transactions -->
+                <section class="col-lg-8 recent_transactions">
+                    <div class="surface-card table-card h-100">
+                        <div class="card-head">
+                            <h2>Recent Transactions</h2>
+                            <a href="stock_transaction.html" class="small fw-semibold text-decoration-none">View all <i class="bi bi-arrow-right"></i></a>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover transactions_table">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Warehouse</th>
+                                        <th>Type</th>
+                                        <th>Quantity</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="transaction_body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Quick actions -->
+                <section class="col-lg-4 quick_actions">
+                    <div class="surface-card h-100">
+                        <div class="card-head"><h2>Quick Actions</h2></div>
+                        <div class="p-3 d-grid gap-2">
+                            <a class="quick-action" href="product.html"><i class="bi bi-box lead-icon"></i>View Products<i class="bi bi-arrow-right"></i></a>
+                            <a class="quick-action" href="category.html"><i class="bi bi-tags lead-icon"></i>View Categories<i class="bi bi-arrow-right"></i></a>
+                            <a class="quick-action" href="warehouse.html"><i class="bi bi-buildings lead-icon"></i>View Warehouses<i class="bi bi-arrow-right"></i></a>
+                            <a class="quick-action" href="stock_transaction.html"><i class="bi bi-arrow-left-right lead-icon"></i>Stock Transactions<i class="bi bi-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="js/api.js"></script>
 <script src="js/dashboard.js"></script>
+</body>
 </html>

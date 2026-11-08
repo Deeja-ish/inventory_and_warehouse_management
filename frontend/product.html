@@ -1,69 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Page</title>
+    <title>Products | StockWise Inventory</title>
+    <meta name="description" content="View, search, create and edit your company's products, SKUs and reorder levels.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style/style.css">
 </head>
-
 <body>
-    <header class="app-title">
-        <h2 class="main-title">Product page</h2>
-        <p class="title-description"> View and search for your companies different products here</p>
-    </header>
-    <div class="product_navigate">
-        <input type='search' id="search_bar" placeholder="search for a product....." class="search-bar">
-        <button id="add_product">Add Product</button>
+<div class="app-shell">
+    <aside class="sidebar offcanvas-lg offcanvas-start" tabindex="-1" id="sidebar" aria-label="Main navigation">
+        <div class="d-flex align-items-center justify-content-between pe-3">
+            <a href="dashboard.html" class="sidebar-brand"><span class="brand-mark"><i class="bi bi-box-seam"></i></span>StockWise</a>
+            <button type="button" class="btn-close d-lg-none" data-bs-dismiss="offcanvas" data-bs-target="#sidebar" aria-label="Close"></button>
+        </div>
+        <nav class="sidebar-nav">
+            <p class="sidebar-label">Overview</p>
+            <a class="sidebar-link" href="dashboard.html"><i class="bi bi-grid-1x2"></i>Dashboard</a>
+            <p class="sidebar-label">Catalog</p>
+            <a class="sidebar-link active" href="product.html"><i class="bi bi-box"></i>Products</a>
+            <a class="sidebar-link" href="category.html"><i class="bi bi-tags"></i>Categories</a>
+            <p class="sidebar-label">Operations</p>
+            <a class="sidebar-link" href="warehouse.html"><i class="bi bi-buildings"></i>Warehouses</a>
+            <a class="sidebar-link" href="stock_transaction.html"><i class="bi bi-arrow-left-right"></i>Stock Transactions</a>
+            <a class="sidebar-link" href="inventory.html"><i class="bi bi-clipboard-data"></i>Inventory</a>
+            <a class="sidebar-link" href="low_stock.html"><i class="bi bi-exclamation-triangle"></i>Low Stock</a>
+            <p class="sidebar-label">Admin</p>
+            <a class="sidebar-link" href="update_role.html"><i class="bi bi-person-gear"></i>Update Role</a>
+        </nav>
+    </aside>
+
+    <div class="app-main">
+        <header class="topbar">
+            <div class="d-flex align-items-center gap-2">
+                <button class="btn btn-light-soft d-lg-none px-2 py-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar" aria-label="Open menu">
+                    <i class="bi bi-list fs-5"></i>
+                </button>
+                <span class="topbar-crumb">Catalog / <strong>Products</strong></span>
+            </div>
+            <div class="user-chip"><span class="avatar"><i class="bi bi-person"></i></span>My Account</div>
+        </header>
+
+        <main class="app-content main-container">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Products</h1>
+                    <p class="page-subtitle">View and search your company's products.</p>
+                </div>
+                <button id="add_product" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Add Product</button>
+            </div>
+
+            <div class="surface-card toolbar product_navigate">
+                <div class="search-wrap">
+                    <i class="bi bi-search"></i>
+                    <input type="search" id="search_bar" placeholder="Search for a product..." class="form-control search-bar">
+                </div>
+            </div>
+
+            <!-- Create / edit pop-up (shown and hidden by product.js) -->
+            <form id="add_product_form" class="add_form form-panel" style="display: none;">
+                <h2 class="panel-title header product_header">Add Product</h2>
+                <p class="panel-subtitle">Fill in the product details below.</p>
+                <div class="row g-3">
+                    <div class="col-12 input-section">
+                        <label for="product_name" class="form-label">Product Name</label>
+                        <input type="text" name="product_name" id="product_name" class="form-control" required>
+                    </div>
+                    <div class="col-md-6 input-section">
+                        <label for="category" class="form-label">Category</label>
+                        <select name="category" id="category" class="form-select"></select>
+                    </div>
+                    <div class="col-md-6 input-section">
+                        <label for="product_type" class="form-label">Product Type</label>
+                        <select name="product_type" id="product_type" class="form-select"></select>
+                    </div>
+                    <div class="col-md-6 input-section">
+                        <label for="unit_of_measure" class="form-label">Unit of Measure</label>
+                        <select name="unit_of_measure" id="unit_of_measure" class="form-select"></select>
+                    </div>
+                    <div class="col-md-6 input-section">
+                        <label for="reorder_level" class="form-label">Reorder Level</label>
+                        <input type="number" min="0" id="reorder_level" class="form-control">
+                    </div>
+                    <div class="col-12 input-section">
+                        <label for="product_description" class="form-label">Product Description</label>
+                        <textarea name="product_description" id="product_description" class="form-control"></textarea>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="cancle_button" class="btn btn-light-soft" style="display: none;">Cancel</button>
+                    <button type="submit" id="create_button" class="btn btn-primary">Create Product</button>
+                </div>
+            </form>
+
+            <div class="surface-card table-card">
+                <div class="table-responsive">
+                    <table id="product_showcase_table" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Category</th>
+                                <th>SKU</th>
+                                <th>Product Type</th>
+                                <th>Unit</th>
+                                <th>Description</th>
+                                <th>Reorder Level</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody class="table_body" id="product_table"></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
     </div>
-    <main class="main-container">
-        <form id="add_product_form" , class="add_form" style="display: none;">
-            <h2 class ='product_header'>Add Product</h2>
-            <div class="input-section">
-                <label for="product_name">Product Name:</label>
-                <input type="text" name='product_name' required id="product_name">
-            </div>
-            <div class="input-section">
-                <label for="category">Category</label>
-                <select name="category" id="category"></select>
-            </div>
-            <div class="input-section">
-                <label for="product-type">Product Type:</label>
-                <select name="product_type" id="product_type"></select>
-            </div>
-            <div class="input-select">
-                <label for="unit_of_measure">Unit of measure</label>
-                <select name="unit_of_measure" id="unit_of_measure"></select>
-            </div>
-            <div class="input-select">
-                <label for="product_description">Product Description</label>
-                <textarea name="product_description" id="product_description"></textarea>
-            </div>
-            <div class="input-select">
-                <label for="reorder_level">Reorder Level:</label>
-                <input type="text", id="reorder_level">
-            </div>
-            <button type="submit" id="create_button">Creat Product</button>
-            <button type="button" id="cancle_button" style="display: none;">cancle</button>
-        </form>
-        <table id="product_table">
-            <thead>
-                <tr>
-                    <th>Product Name</th>
-                    <th>Category</th>
-                    <th>SKU</th>
-                    <th>Product Type</th>
-                    <th>Unit of Measure</th>
-                    <th>Product Description</th>
-                    <th>Reorder Level</th>
-                </tr>
-            </thead>
-            <tbody class="table_body">
-            </tbody>
-        </table>
-    </main>
-</body>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="js/api.js"></script>
 <script src="js/product.js"></script>
+</body>
 </html>

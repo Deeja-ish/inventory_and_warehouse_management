@@ -3,69 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Warehouse Page</title>
+    <title>Warehouses | StockWise Inventory</title>
+    <meta name="description" content="View, search, add and update your company's warehouses, managers and storage capacity.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style/style.css">
 </head>
 <body>
-    <header class="app-title">
-        <h2 class="main-title">Warehouse Page</h2>
-        <p class="title-description">View and search for you companies available warehouse</p>
-    </header>
-    <div class="warehouse_navigate">
-        <input type="search" id="search_bar" placeholder="seaech for category">
-        <button type="button">Add Warehouse</button>
+<div class="app-shell">
+    <aside class="sidebar offcanvas-lg offcanvas-start" tabindex="-1" id="sidebar" aria-label="Main navigation">
+        <div class="d-flex align-items-center justify-content-between pe-3">
+            <a href="dashboard.html" class="sidebar-brand"><span class="brand-mark"><i class="bi bi-box-seam"></i></span>StockWise</a>
+            <button type="button" class="btn-close d-lg-none" data-bs-dismiss="offcanvas" data-bs-target="#sidebar" aria-label="Close"></button>
+        </div>
+        <nav class="sidebar-nav">
+            <p class="sidebar-label">Overview</p>
+            <a class="sidebar-link" href="dashboard.html"><i class="bi bi-grid-1x2"></i>Dashboard</a>
+            <p class="sidebar-label">Catalog</p>
+            <a class="sidebar-link" href="product.html"><i class="bi bi-box"></i>Products</a>
+            <a class="sidebar-link" href="category.html"><i class="bi bi-tags"></i>Categories</a>
+            <p class="sidebar-label">Operations</p>
+            <a class="sidebar-link active" href="warehouse.html"><i class="bi bi-buildings"></i>Warehouses</a>
+            <a class="sidebar-link" href="stock_transaction.html"><i class="bi bi-arrow-left-right"></i>Stock Transactions</a>
+            <a class="sidebar-link" href="inventory.html"><i class="bi bi-clipboard-data"></i>Inventory</a>
+            <a class="sidebar-link" href="low_stock.html"><i class="bi bi-exclamation-triangle"></i>Low Stock</a>
+            <p class="sidebar-label">Admin</p>
+            <a class="sidebar-link" href="update_role.html"><i class="bi bi-person-gear"></i>Update Role</a>
+        </nav>
+    </aside>
+
+    <div class="app-main">
+        <header class="topbar">
+            <div class="d-flex align-items-center gap-2">
+                <button class="btn btn-light-soft d-lg-none px-2 py-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar" aria-label="Open menu">
+                    <i class="bi bi-list fs-5"></i>
+                </button>
+                <span class="topbar-crumb">Operations / <strong>Warehouses</strong></span>
+            </div>
+            <div class="user-chip"><span class="avatar"><i class="bi bi-person"></i></span>My Account</div>
+        </header>
+
+        <main class="app-content main-container">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Warehouses</h1>
+                    <p class="page-subtitle">View and search your company's warehouses.</p>
+                </div>
+                <button type="button" id="add_warehouse" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Add Warehouse</button>
+            </div>
+
+            <div class="surface-card toolbar warehouse_navigate">
+                <div class="search-wrap">
+                    <i class="bi bi-search"></i>
+                    <input type="search" id="search_bar" class="form-control" placeholder="Search for a warehouse...">
+                </div>
+            </div>
+
+            <!-- Create / edit pop-up (shown and hidden by warehouse.js) -->
+            <form id="warehouse_form" class="warehouse_form form-panel" style="display: none;">
+                <h2 id="warehouse_title" class="panel-title">Add Warehouse</h2>
+                <p class="panel-subtitle">Location, manager and storage capacity.</p>
+                <div class="row g-3">
+                    <div class="col-12 input-section">
+                        <label for="warehouse_name" class="form-label">Warehouse Name</label>
+                        <input type="text" id="warehouse_name" class="form-control" required>
+                    </div>
+                    <div class="col-md-6 input-section">
+                        <label for="city" class="form-label">City</label>
+                        <input type="text" id="city" class="form-control" required>
+                    </div>
+                    <div class="col-md-6 input-section">
+                        <label for="state" class="form-label">State</label>
+                        <input type="text" id="state" class="form-control">
+                    </div>
+                    <div class="col-md-8 input-section">
+                        <label for="address" class="form-label">Address</label>
+                        <input type="text" id="address" class="form-control">
+                    </div>
+                    <div class="col-md-4 input-section">
+                        <label for="country" class="form-label">Country</label>
+                        <input type="text" id="country" class="form-control">
+                    </div>
+                    <div class="col-md-6 input-section">
+                        <label for="warehouse_type" class="form-label">Warehouse Type</label>
+                        <select name="warehouse_type" id="warehouse_type" class="form-select"></select>
+                    </div>
+                    <div class="col-md-6 input-section">
+                        <label for="manager" class="form-label">Manager</label>
+                        <select name="manager" id="manager" class="form-select"></select>
+                    </div>
+                    <div class="col-md-6 input-section">
+                        <label for="capacity" class="form-label">Capacity</label>
+                        <input type="number" min="0" id="capacity" class="form-control">
+                    </div>
+                    <div class="col-md-6 input-section">
+                        <label for="capacity_unit" class="form-label">Capacity Unit</label>
+                        <select name="capacity_unit" id="capacity_unit" class="form-select"></select>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="cancle_button" class="btn btn-light-soft">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+
+            <div class="surface-card table-card table_section">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Warehouse Name</th>
+                                <th>Code</th>
+                                <th>City</th>
+                                <th>Address</th>
+                                <th>State</th>
+                                <th>Country</th>
+                                <th>Type</th>
+                                <th>Manager</th>
+                                <th>Capacity</th>
+                                <th>Unit</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody class="table_body" id="warehouse_table"></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
     </div>
-    <form id="warehouse_form" class="warehouse_form" style="display: none;">
-        <h2 id="warehouse_title">Add Warehouse</h2>
-        <div class="input-section">
-            <label for="warehouse_name">Warehouse Name:</label>
-            <input type="text" id="warehouse_name" required>
-        </div>
-        <div class="input-section">
-            <label for="city">City:</label>
-            <input type="text" id="city" required>
-        </div>
-        <div class="input-section">
-            <label for="address">Address:</label>
-            <input type="text" id="address">
-        </div>
-        <div class="input-section">
-            <label for="state">State:</label>
-            <input type="text" id="state">
-        </div>
-        <div class="input-section">
-            <label for="country">Country:</label>
-            <input type="text" id="country">
-        </div>
-        <div class="input-section">
-            <label for="warehouse_type">Warehouse Type:</label>
-            <select name="warehouse_type" id="warehouse_type"></select>
-        </div>
-        <div class="input-section">
-            <label for="manager">Manager:</label>
-            <select name="manager" id="manager"></select>
-        </div>
-        <button type="submit">Submit</button>
-        <button type="button" id="cancle_button"></button>
-    </form>
-    <div class="table_section">
-        <table>
-            <thead>
-                <tr>
-                    <td>Warehouse Name</td>
-                    <td>Warehosue Code</td>
-                    <td>City</td>
-                    <td>Address</td>
-                    <td>State</td>
-                    <td>Country</td>
-                    <td>Warehouse Type</td>
-                    <td>Manager</td>
-                </tr>
-            </thead>
-            <td class="table_body"></td>
-        </table>
-    </div>
-</body>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="js/api.js"></script>
 <script src="js/warehouse.js"></script>
+</body>
 </html>

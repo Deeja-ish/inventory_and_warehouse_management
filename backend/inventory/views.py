@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from .models import Category, Product, Inventory, StockTransaction
 from .serializers import CategorySerializers, ProductSerializer, InventorySerializer, StockTransactionSerializer
-from .permission import IsAllowedAdmin, IsProductManager, IsStockManager, IsInventoryManager
+from .permission import IsAllowedAdmin
 from rest_framework.permissions import IsAuthenticated
 from users.permissions import IsManagerOrAdmin
 from rest_framework.decorators import action
@@ -26,7 +26,7 @@ class CategoryViewSet(ModelViewSet):
         if self.action in ['list', 'retrieve']:
             return[IsAuthenticated()]
         if self.action in ['create', 'update', 'partial_update']:
-            return[IsInventoryManager()]
+            return[IsAllowedAdmin()]
         if self.action == 'destroy':
             return[IsManagerOrAdmin()]
         return[IsAuthenticated()]
@@ -49,7 +49,7 @@ class ProductViewSet(ModelViewSet):
         if self.action in ['list', 'retrieve']:
             return [IsAuthenticated()]
         if self.action in ['create', 'update', 'partial_update']:
-            return [IsProductManager()]
+            return [IsAllowedAdmin()]
         if self.action == 'destroy':
             return [IsManagerOrAdmin()]
         return [IsAuthenticated()]
@@ -92,8 +92,8 @@ class InventoryViewSet(ModelViewSet):
         return Inventory.objects.filter(product__company= self.request.user.company)
 
     def get_permissions(self):
-        if self.action == ['partial_update']:
-            return [IsInventoryManager()]
+        if self.action == 'partial_update':
+            return [IsAllowedAdmin()]
         return [IsAuthenticated()]
 
     @action(detail=False, methods=['get'])
@@ -120,6 +120,7 @@ class StockTransactionViewSet(ModelViewSet):
 
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['product', "warehouse", 'transaction_type']
+    http_method_names = ['get', 'post', 'head', 'options']
 
     def get_queryset(self):
         if not self.request.user.is_authenticated:
@@ -128,19 +129,11 @@ class StockTransactionViewSet(ModelViewSet):
             return StockTransaction.objects.all()
         return StockTransaction.objects.filter(product__company=self.request.user.company)
 
-    def get_permissions(self):
-        if self.action in ['list', 'retrieve']:
-            return[IsAuthenticated()]
-        if self.action in ['create', 'update', 'partial_update']:
-            return[IsStockManager()]
-        if self.action == "destroy":
-            return [IsManagerOrAdmin()]
-        return [IsAuthenticated()]
 
     # create a summary to return the aggregrate of all transactions
     @action(detail=False, methods=["get"])
     def summary(self, request):
-        transactions = self.get_queryset()
+        transactions = self.filter_queryset(self.get_queryset())
 
         summary = transactions.aggregate(
             total_transaction = Count("id"),
@@ -159,6 +152,11 @@ class StockTransactionViewSet(ModelViewSet):
             ))
         )
         return Response(summary)
+
+class TransactionTypeView(APIView):
+    def get(self, request):
+        transaction_type = StockTransaction.TransactionType.choices
+        return Response(transaction_type)
 
 
     

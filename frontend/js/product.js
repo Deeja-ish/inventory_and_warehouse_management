@@ -116,7 +116,7 @@ cancle_button.addEventListener("click", async function () {
 })
 
 // create a function to show the products in a table
-const products_table = document.getElementById("table_body")
+const products_table = document.getElementById("product_table")
 async function load_products_table() {
     products_table.innerHTML = ""
     try {

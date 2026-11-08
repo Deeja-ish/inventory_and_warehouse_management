@@ -111,4 +111,4 @@ class StockTransaction(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.product}-{self.quantity}-{self.quantity_unit}-{self.user}"
+        return f"{self.product}-{self.transaction_type}-{self.quantity}-{self.created_at}"

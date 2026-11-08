@@ -7,6 +7,7 @@ from users.permissions import IsManagerOrAdmin
 from rest_framework.decorators import action
 from django.db.models import Count
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 # Create your views here.
 class WarehouseViewSet(ModelViewSet):
@@ -23,8 +24,8 @@ class WarehouseViewSet(ModelViewSet):
         if self.action in ['create', "update", "partial_update"]:
             return [IsAllowed()]
         if self.action == 'destroy':
-            return [IsCompanyAdmin()]
-        return [AllowAny()]
+            return [IsManagerOrAdmin()]
+        return [IsAuthenticated()]
 
     # create the warehouse summary count
     @action(detail=False, methods=['get'])
@@ -35,4 +36,21 @@ class WarehouseViewSet(ModelViewSet):
             total_warehouse = Count("id")
         )
         return Response(summary)
+
+
+# show the warehouse type options
+class WarehouseTypeView(APIView):
+    def get(self, request):
+        types_warehouse = Warehouse.WarehouseType.choices 
+        return Response(types_warehouse)
+
+
+# create a view for the capacity_unit
+class CapacityUnitView(APIView):
+    def get(self, request):
+        types_capacity = Warehouse.CapacityUnit.choices
+        return Response(types_capacity)
+
+
+    
 

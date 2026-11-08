@@ -21,7 +21,7 @@ class Warehouse(models.Model):
         DISTRIBUTION_CENTER = "Distribution_center", "DISTRIBUTION_CENTER"
     warehouse_type = models.CharField(max_length=100, choices=WarehouseType.choices)
     is_active = models.BooleanField(default=True)
-    manager = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='warehouse_manager')
+    manager = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='warehouse_manager', limit_choices_to = {"role" : User.Role.MANAGER})
     capacity = models.PositiveIntegerField(blank=True, null=True)
     class CapacityUnit(models.TextChoices):
         PALLETS = "Pallets", "PALLETS"

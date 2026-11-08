@@ -6,7 +6,7 @@ class WarehouseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Warehouse
         fields = '__all__'
-        read_only_fields = ('warehouse_code', 'created_at', 'updated_at', 'is_active')
+        read_only_fields = ('warehouse_code', 'created_at', 'updated_at', 'is_active', 'company')
 
     # save the current serializer
     def __init__(self, *args, **kwargs):
@@ -20,18 +20,13 @@ class WarehouseSerializer(serializers.ModelSerializer):
                     self.fields['manager'].queryset = User.objects.filter(company=request.user.company, role=User.Role.MANAGER)
                 else:
                     self.fields['manager'].queryset = User.objects.filter(role=User.Role.MANAGER)
-    
 
-    # validate the submitted request
-    def validate(self, attrs):
-        request = self.context.get('request')
+    def create(self, validated_data):
+        request = self.context.get("request")
 
-        if request and not getattr(request.user, 'is_system_admin', False):
-            company = attrs.get('company')
+        if request and hasattr(request, "user") and request.user.is_authenticated:
+            if request.user.company is None:
+                raise serializers.ValidationError({"company" : "No Company Provided."})
+            validated_data['company'] = request.user.company
 
-            # check if the company was provided
-            if company and request.user.company !=company:
-                raise serializers.ValidationError({'company' : "You cannot assign a warehouse"})
-
-        return attrs
-
+        return super().create(validated_data)

@@ -126,7 +126,7 @@ update_form.addEventListener("submit", async function (e) {
             response_message.innerHTML = `
             <p class='success_message'> User status has been updated successfully</p>
             `
-            document.getElementById("detail_current_role") = new_role
+            document.getElementById("detail_current_role").textContent = new_role
             // set a time out 
             setTimeout(() => {
                 window.location.href = "dashboard.html"

@@ -1,5 +1,5 @@
 from rest_framework.routers import DefaultRouter
-from .views import CategoryViewSet, ProductViewSet, InventoryViewSet, StockTransactionViewSet, ProductTypeView, UnitTypeView
+from .views import CategoryViewSet, ProductViewSet, InventoryViewSet, StockTransactionViewSet, ProductTypeView, UnitTypeView, TransactionTypeView
 from django.urls import path, include
 
 router = DefaultRouter()
@@ -13,5 +13,6 @@ router.register(r"stock_transactions", StockTransactionViewSet, basename='stock_
 urlpatterns = [
     path("", include(router.urls)),
     path("product_type/", ProductTypeView.as_view()),
-    path("unit_type/", UnitTypeView.as_view())
+    path("unit_type/", UnitTypeView.as_view()),
+    path("stock_type/", TransactionTypeView.as_view())
 ]

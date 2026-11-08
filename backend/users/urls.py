@@ -1,5 +1,5 @@
 from rest_framework.routers  import DefaultRouter
-from .views import UserViewSet, ProfileAPIView, ChangePasswordView, GetRolesView
+from .views import UserViewSet, ProfileAPIView, ChangePasswordView, GetRolesView, LogoutView
 from django.urls import path, include
 
 router = DefaultRouter()
@@ -10,5 +10,6 @@ urlpatterns = [
     path("profile/", ProfileAPIView.as_view()),
     path("change_password/", ChangePasswordView.as_view()),
     path("get_roles/", GetRolesView.as_view()),
+    path("logout/", LogoutView.as_view())
     
 ]
