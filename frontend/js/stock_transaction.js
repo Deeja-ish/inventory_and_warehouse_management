@@ -130,8 +130,9 @@ async function load_table() {
 
                 const tr = document.createElement("tr")
                 tr.innerHTML = `
-                <td>${stock.warehouse}</td>
-                <td>${stock.product}</td>
+                <td>${stock.user_name}</td>
+                <td>${stock.warehouse_name}</td>
+                <td>${stock.product_name}</td>
                 <td>${stock.transaction_type}</td>
                 <td>${stock.quantity_before}</td>
                 <td>${stock.quantity_after}</td>

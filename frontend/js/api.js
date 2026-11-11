@@ -55,6 +55,16 @@ async function authenticateFetch(url, options={}) {
     return response
 }
 
+// check the current user page and lock any access
+const publicPages = ['login.html', "register_page.html", 'index.html', 'company.html']
+const currentPage = window.location.pathname.split("/").pop()
+
+if(!localStorage.getItem("access_token") && !publicPages.include(currentPage) && currentPage !== ""){
+    window.location.href = "login.html"
+}
+
+
+// check the user role
 let user_role = localStorage.getItem("user_role")
 console.log(user_role)
 // define a functio to get all the users information
@@ -92,3 +102,31 @@ if(search_input){
         })
     })
 }
+
+// create the logout functinality 
+refresh_token = localStorage.getItem("refresh_token")
+async function logout(){
+    try {
+        const request = await authenticateFetch(`${BASE_URL}api/logout/`, {
+            method : "POST",
+            credentials : "include",
+            body : JSON.stringify({"refresh" : refresh_token })
+        })
+    } catch (error) {
+        console.error(error)
+    }
+
+    localStorage.removeItem("refresh_token")
+    localStorage.removeItem("access_token")
+    localStorage.removeItem("user_role")
+
+    window.location.href = "login.html"
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const logout = document.getElementById("logout_button")
+    logout.addEventListener("click", (e) => {
+        e.preventDefault()
+        logout()
+    })
+})
