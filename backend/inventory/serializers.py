@@ -51,6 +51,10 @@ class ProductSerializer(serializers.ModelSerializer):
 
 # create the stock transaction serializer
 class StockTransactionSerializer(serializers.ModelSerializer):
+    product_name = serializers.CharField(source="product.product_name")
+    warehouse_name = serializers.CharField(source='warehouse.warehouse_name')
+    user_name = serializers.CharField(source='user.username')
+
     quantity = serializers.IntegerField(min_value=1)
 
     class Meta:
@@ -149,6 +153,8 @@ class StockTransactionSerializer(serializers.ModelSerializer):
 
 # create the inventory serializer
 class InventorySerializer(serializers.ModelSerializer):
+    product_name = serializers.CharField(source='product.product_name')
+    warehouse_name = serializers.CharField(source='warehouse.warehouse_name')
     stock_status = serializers.SerializerMethodField()
     class Meta:
         model = Inventory
